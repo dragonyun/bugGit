@@ -43,7 +43,12 @@
             <el-menu-item index="1-1">数据表1</el-menu-item>
             <el-menu-item index="1-2">数据表2</el-menu-item>
             <el-menu-item index="1-3">数据表3</el-menu-item>
-            <el-menu-item index="1-4">数据表4</el-menu-item>
+            <el-submenu index="1-4">
+              <template slot="title">数据表4</template>
+              <el-menu-item index="2-4-1">选项1</el-menu-item>
+              <el-menu-item index="2-4-2">选项2</el-menu-item>
+              <el-menu-item index="2-4-3">选项3</el-menu-item>
+            </el-submenu>
           </el-submenu>
           <el-menu-item index="2">
             <i class="el-icon-document"></i>
@@ -71,6 +76,7 @@
               </el-option>
             </el-select>
             <el-button type="primary">生产代码</el-button>
+            <el-button type="primary" @click="morePdSetClick">更多配置</el-button>
         </el-col>
         <el-col :span="24" class="content-display">
           <aside class="content-index">
@@ -108,6 +114,7 @@
         </el-col>
       </section>
     </el-col>
+    <!--dialog数据库新建连接-->
     <el-dialog title="数据库新建连接" width="480px" :visible.sync="dbDialogFormVisible">
       <el-form :model="dbAddForm" label-width="60px" :inline="true" size="medium">
         <el-form-item label="连接名:" :label-width="dbAddFormLabelWidth">
@@ -129,6 +136,24 @@
       <div slot="footer" class="dialog-footer">
         <el-button @click="dbDialogFormVisible = false">取 消</el-button>
         <el-button type="primary" @click="dbDialogFormVisible = false">确 定</el-button>
+      </div>
+    </el-dialog>
+    <!--dialog生成代码~更多设置-->
+    <el-dialog title="更多设置" width="480px" :visible.sync="pdSetDialogFormVisible">
+      <el-form :model="pdSetForm" label-width="60px" :inline="true" size="medium">
+        <el-form-item label="项目名:" :label-width="pdSetFormLabelWidth">
+          <el-input v-model="pdSetForm.projectName"></el-input>
+        </el-form-item>
+        <el-form-item label="表名:" :label-width="pdSetFormLabelWidth">
+          <el-select v-model="pdSetForm.formName" autocomplete="off">
+            <el-option label="biz" value="biz"></el-option>
+            <el-option label="mng" value="mng"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="pdSetDialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="pdSetDialogFormVisible = false">确 定</el-button>
       </div>
     </el-dialog>
   </el-row>
@@ -208,7 +233,6 @@ export default {
           }]
         }]
       }],
-      dialogTableVisible: false,
       dbDialogFormVisible: false,
       dbAddForm: {
         name: '',
@@ -217,7 +241,13 @@ export default {
         userName: '',
         password: ''
       },
-      dbAddFormLabelWidth: '120px'
+      dbAddFormLabelWidth: '120px',
+      pdSetDialogFormVisible: false,
+      pdSetForm: {
+        projectName: '',
+        formName: ''
+      },
+      pdSetFormLabelWidth: '120px'
     }
   },
   methods: {
@@ -234,6 +264,9 @@ export default {
     },
     addDataBase: function () {
       this.dbDialogFormVisible = true
+    },
+    morePdSetClick: function () {
+      this.pdSetDialogFormVisible = true
     },
     handleOpen: function (key, keyPath) {
       console.log(key, keyPath)
@@ -368,6 +401,7 @@ export default {
       .menu-expanded{
         flex: 0 0 200px;
         width: 200px;
+        overflow: auto;
       }
       .content-container {
         background: #afb1bd;
